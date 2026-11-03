@@ -42,8 +42,10 @@ export default function Recommendations({ books, onAdd }) {
   return (
     <section>
       <div className="section-head">
-        <h2>Recommended for you</h2>
-        <button className="btn ghost" onClick={() => setNonce((n) => n + 1)} disabled={loading}>
+        <div className="section-title">
+          <h2>✨ Recommended for you</h2>
+        </div>
+        <button className="btn" onClick={() => setNonce((n) => n + 1)} disabled={loading}>
           ↻ Refresh
         </button>
       </div>
@@ -52,9 +54,16 @@ export default function Recommendations({ books, onAdd }) {
       </p>
       {error && <p className="error">{error}</p>}
       {loading ? (
-        <p className="muted">Finding books you might like…</p>
+        <div className="rec-grid">
+          {Array.from({ length: 6 }, (_, i) => (
+            <div className="skeleton" key={i} />
+          ))}
+        </div>
       ) : recs.length === 0 ? (
-        <p className="empty">No recommendations right now.</p>
+        <div className="empty" style={{ marginTop: '0.75rem' }}>
+          <span className="empty-icon">🔍</span>
+          <strong>No recommendations right now</strong>
+        </div>
       ) : (
         <div className="rec-grid">
           {recs.map((r) => (
@@ -66,7 +75,7 @@ export default function Recommendations({ books, onAdd }) {
               )}
               <strong title={r.title}>{r.title}</strong>
               <span className="muted small">{r.authors.slice(0, 2).join(', ')}</span>
-              <span className="reason small">{r.reason}</span>
+              <span className="reason">{r.reason}</span>
               <button className="btn small-btn" disabled={adding === r.key} onClick={() => add(r)}>
                 {adding === r.key ? 'Adding…' : '+ Want to read'}
               </button>
