@@ -2,7 +2,10 @@ export default function SetupNotice() {
   return (
     <div className="center">
       <div className="card narrow">
-        <h1>📚 Shelf setup</h1>
+        <div className="brand" style={{ marginBottom: '1rem' }}>
+          <span className="logo">📚</span> Shelf setup
+        </div>
+        <p className="muted" style={{ marginBottom: '0.5rem' }}>Three quick steps and you're reading:</p>
         <ol className="steps">
           <li>
             Open <code>.env</code> and set <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.

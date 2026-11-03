@@ -19,6 +19,49 @@ const TABS = [
   { id: 'finished', label: 'Finished' },
 ]
 
+function greeting() {
+  const h = new Date().getHours()
+  if (h < 5) return 'Still up reading?'
+  if (h < 12) return 'Good morning'
+  if (h < 17) return 'Good afternoon'
+  return 'Good evening'
+}
+
+function Hero({ stats }) {
+  let message
+  if (stats.today > 0) {
+    message = `You've read ${stats.today} page${stats.today === 1 ? '' : 's'} today. Keep the momentum going!`
+  } else if (stats.streak > 0) {
+    message = `Log a few pages today to keep your ${stats.streak}-day streak alive.`
+  } else {
+    message = 'Pick up a book and log your first pages to start a streak.'
+  }
+
+  return (
+    <section className="hero">
+      <div className="hero-text">
+        <span className="hero-eyebrow">
+          {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+        </span>
+        <h1>{greeting()}, reader.</h1>
+        <p>{message}</p>
+        <div className="hero-chips">
+          <span className="chip">🔥 {stats.streak} day streak</span>
+          <span className="chip">📈 {stats.avgPerDay.toFixed(1)} pages/day</span>
+          <span className="chip">🏁 {stats.finishedThisYear} finished this year</span>
+        </div>
+      </div>
+      <div className="hero-art" aria-hidden="true">
+        <span className="spine" />
+        <span className="spine" />
+        <span className="spine" />
+        <span className="spine" />
+        <span className="spine" />
+      </div>
+    </section>
+  )
+}
+
 function Tracker() {
   const [books, setBooks] = useState([])
   const [logs, setLogs] = useState([])
@@ -74,18 +117,25 @@ function Tracker() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand">
-          <span className="logo">📚</span> Shelf
+        <div className="topbar-inner">
+          <div className="brand">
+            <span className="logo">📚</span> Shelf
+          </div>
+          <span className="topbar-date">
+            {books.length} book{books.length === 1 ? '' : 's'} · {stats.totalPages.toLocaleString()} pages read
+          </span>
         </div>
       </header>
 
       <main className="container">
         {error && (
           <div className="alert" role="alert">
-            {error}
+            <span>{error}</span>
             <button className="link" onClick={() => setError('')}>Dismiss</button>
           </div>
         )}
+
+        <Hero stats={stats} />
 
         <StatsCards stats={stats} />
 
@@ -95,11 +145,23 @@ function Tracker() {
         </div>
 
         <section>
-          <h2>Currently reading</h2>
+          <div className="section-head">
+            <div className="section-title">
+              <h2>Currently reading</h2>
+              {!loading && reading.length > 0 && <span className="pill-count">{reading.length}</span>}
+            </div>
+          </div>
           {loading ? (
-            <p className="muted">Loading your shelf…</p>
+            <div className="book-grid">
+              <div className="skeleton" />
+              <div className="skeleton" />
+            </div>
           ) : reading.length === 0 ? (
-            <p className="empty">Nothing in progress. Add a book and hit “Start reading”.</p>
+            <div className="empty">
+              <span className="empty-icon">📖</span>
+              <strong>Nothing in progress</strong>
+              <span className="small">Add a book and hit “Start reading”.</span>
+            </div>
           ) : (
             <div className="book-grid">
               {reading.map((b) => (
@@ -111,7 +173,9 @@ function Tracker() {
 
         <section>
           <div className="section-head">
-            <h2>My shelf</h2>
+            <div className="section-title">
+              <h2>My shelf</h2>
+            </div>
             <div className="tabs" role="tablist">
               {TABS.map((t) => (
                 <button
@@ -127,7 +191,13 @@ function Tracker() {
             </div>
           </div>
           {shelf.length === 0 ? (
-            <p className="empty">No books here yet.</p>
+            <div className="empty">
+              <span className="empty-icon">{tab === 'finished' ? '🏆' : '🔖'}</span>
+              <strong>No books here yet</strong>
+              <span className="small">
+                {tab === 'finished' ? 'Finished books will show up here.' : 'Books you want to read later will live here.'}
+              </span>
+            </div>
           ) : (
             <div className="book-grid">
               {shelf.map((b) => (

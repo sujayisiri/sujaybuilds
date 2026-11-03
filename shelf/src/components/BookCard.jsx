@@ -56,7 +56,7 @@ export default function BookCard({ book, stats, onStart, onFinish, onDelete, onL
             {pct !== null && <span>{pct}%</span>}
           </div>
           {pct !== null && (
-            <div className="progress">
+            <div className="progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
               <span style={{ width: `${pct}%` }} />
             </div>
           )}
@@ -74,7 +74,7 @@ export default function BookCard({ book, stats, onStart, onFinish, onDelete, onL
       )}
 
       {book.status === 'reading' && (
-        <form className="row" onSubmit={logPages}>
+        <form className="row log-form" onSubmit={logPages}>
           <input
             type="number"
             min="1"
@@ -93,12 +93,12 @@ export default function BookCard({ book, stats, onStart, onFinish, onDelete, onL
       <div className="row wrap actions">
         {book.status !== 'reading' && (
           <button className="btn" disabled={busy} onClick={() => act(() => onStart(book))}>
-            {book.status === 'finished' ? 'Re-read' : 'Start reading'}
+            {book.status === 'finished' ? '↺ Re-read' : '▶ Start reading'}
           </button>
         )}
         {book.status === 'reading' && (
           <button className="btn success" disabled={busy} onClick={() => act(() => onFinish(book))}>
-            Done reading
+            ✓ Done reading
           </button>
         )}
         <button className="btn ghost danger" disabled={busy} onClick={() => onDelete(book)}>

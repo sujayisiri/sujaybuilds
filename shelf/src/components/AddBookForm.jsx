@@ -46,8 +46,8 @@ export default function AddBookForm({ onAdd }) {
   return (
     <div className="card">
       <div className="card-head">
-        <h3>Add a book</h3>
-        <span className="muted">Open Library · Google Books</span>
+        <h3>➕ Add a book</h3>
+        <span className="source-tag">Open Library · Google Books</span>
       </div>
       <form className="row" onSubmit={lookup}>
         <input
@@ -64,7 +64,7 @@ export default function AddBookForm({ onAdd }) {
       </form>
       {error && <p className="error">{error}</p>}
       {missingIsbn ? (
-        <button className="link" onClick={() => enterManually(missingIsbn)}>
+        <button className="link small no-isbn" onClick={() => enterManually(missingIsbn)}>
           Enter the details manually instead
         </button>
       ) : (
@@ -109,10 +109,10 @@ export default function AddBookForm({ onAdd }) {
             </label>
             <div className="row wrap">
               <button className="btn primary" disabled={busy || !preview.title.trim()} onClick={() => add('reading')}>
-                Start reading
+                ▶ Start reading
               </button>
               <button className="btn" disabled={busy || !preview.title.trim()} onClick={() => add('want_to_read')}>
-                Want to read
+                🔖 Want to read
               </button>
             </div>
           </div>
