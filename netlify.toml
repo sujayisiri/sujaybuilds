@@ -1,0 +1,4 @@
+[build]
+  base = "shelf"
+  command = "npm run build"
+  publish = "dist" 
